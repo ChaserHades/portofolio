@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --font-poppins: 'Poppins', sans-serif;
+  --font-space-mono: 'Space Mono', monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-glass: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #233554 #0a192f;
+}
+
+body {
+  background-color: #0a192f;
+  color: #a8b2d1;
+  overflow-x: hidden;
+}
+
+/* ── Glass surfaces ── */
+@layer components {
+  .glass {
+    @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.08];
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.09);
+  }
+  .glass-teal {
+    background: rgba(100,255,218,0.05);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(100,255,218,0.18);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(100,255,218,0.14);
+  }
+  .glass-card {
+    background: rgba(17,34,64,0.55);
+    backdrop-filter: blur(30px) saturate(160%) brightness(1.08);
+    -webkit-backdrop-filter: blur(30px) saturate(160%) brightness(1.08);
+    border: 1px solid rgba(100,255,218,0.09);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+}
+
+/* ── Animations ── */
+@keyframes blob-float {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(28px,-18px) scale(1.04); }
+  66%     { transform: translate(-18px,14px) scale(0.97); }
+}
+.blob   { animation: blob-float 14s ease-in-out infinite; will-change: transform; }
+.blob-2 { animation-delay: -5s;  animation-duration: 17s; }
+.blob-3 { animation-delay: -10s; animation-duration: 11s; }
+
+@keyframes shimmer-drift {
+  0%,100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+@keyframes border-pulse {
+  0%,100% { border-color: rgba(100,255,218,0.18); box-shadow: 0 0 20px rgba(100,255,218,0.06); }
+  50%     { border-color: rgba(100,255,218,0.38); box-shadow: 0 0 35px rgba(100,255,218,0.12); }
+}
+.border-pulse { animation: border-pulse 3s ease-in-out infinite; }
+
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+.hero-item {
+  opacity: 0;
+  animation: hero-enter 900ms var(--ease-out-expo) var(--hi-delay, 0ms) forwards;
+  will-change: opacity, transform, filter;
+}
+
+/* ── Scroll Reveal ── */
+.sr-content {
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: opacity, transform;
+  transition:
+    opacity   600ms var(--ease-glass),
+    transform 600ms var(--ease-glass);
+}
+.sr-content.sr-visible { opacity: 1; transform: translateY(0); }
+
+/* ── Stagger ── */
+.sr-stagger-child {
+  opacity: 0;
+  transform: translateX(-22px);
+  will-change: opacity, transform;
+  transition:
+    opacity   600ms var(--ease-glass) var(--child-delay, 0ms),
+    transform 600ms var(--ease-glass) var(--child-delay, 0ms);
+}
+.sr-stagger-active .sr-stagger-child { opacity: 1; transform: translateX(0); }
+
+/* ── Photo card ── */
+.photo-wrap { position: relative; }
+.photo-offset {
+  position: absolute; top: 16px; left: 16px;
+  width: 100%; height: 100%;
+  border-radius: 1rem;
+  border: 2px solid #64ffda;
+  opacity: 0.25; z-index: -1;
+  transition: top 0.4s ease, left 0.4s ease, opacity 0.4s ease;
+}
+.photo-wrap:hover .photo-offset { top: 8px; left: 8px; opacity: 0.45; }
+.photo-wrap img { filter: grayscale(65%) contrast(1.08); transition: filter 0.5s ease; display: block; width: 100%; }
+.photo-wrap:hover img { filter: grayscale(0%) contrast(1.08); }
+
+/* ── Project image ── */
+.project-img-wrap img { filter: grayscale(55%) brightness(0.5); transition: filter 0.5s ease; }
+.project-img-wrap:hover img { filter: grayscale(0%) brightness(1); }
+.gallery-controls { opacity: 0; transition: opacity 0.3s; }
+.project-img-wrap:hover .gallery-controls { opacity: 1; }
+
+/* ── Cursor glow ── */
+.cursor-glow {
+  position: fixed; width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(100,255,218,0.045) 0%, transparent 68%);
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
